@@ -5,23 +5,16 @@ from quizapp.serializers import QuizSerializer, QuizQuestionSerializer, QuizAnsw
 
 
 class ActiveQuiz(APIView):
-
-    def get(self,request):
+  
+  def get(self,request):
         try:
             quiz_data  = Quiz.objects.all()
             quiz_serializer = QuizSerializer(quiz_data, many=True)
+            active_quiz_data = []
             for quiz in quiz_serializer.data:
-                quiz_status = QuizStatus.objects.get(status_id = quiz['status'])
-                quiz_data = QuizStatusSerializer(quiz_status)
-                quiz['status'] = quiz_data.data['status']
-                question_data = QuizQuestion.objects.filter(quiz = quiz['quiz_id'])
-                question_serializer = QuizQuestionSerializer(question_data, many=True)
-                quiz['question'] = question_serializer.data
-                for answer in question_serializer.data:
-                    answer_data = QuizAnswer.objects.filter(question = answer['question_id'])
-                    answer_serializer = QuizAnswerSerializer(answer_data, many=True)
-                    answer['answer'] = answer_serializer.data
-            payload = [{'status':200,'data':quiz_serializer.data}]
+                if quiz['status'] == 2:
+                    active_quiz_data.append(quiz)
+            payload = [{'status':200,'data':active_quiz_data}]
             return Response(payload)
         except Exception as e:
             return Response({"exception":str(e)})
