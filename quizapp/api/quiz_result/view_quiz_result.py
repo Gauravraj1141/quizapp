@@ -16,7 +16,7 @@ class QuizResult(APIView):
                     score = 0
                     for question in quiz_question_serializer.data:
                         score  += question['question_marks']
-                    finished_quiz_result_data['Score'] = score
+                    finished_quiz_result_data['Score'] = f"{score}/{score}"
             else:
                 finished_quiz_result_data['status'] = "Quiz is not finished wait for sometime"
 
