@@ -1,10 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from quizapp.models import Quiz, QuizQuestion, QuizAnswer
 from quizapp.serializers import QuizSerializer, QuizQuestionSerializer, QuizAnswerSerializer
 from datetime import datetime
-from django.utils import timezone
-import json
 
 
 class CreateQuiz(APIView):
@@ -13,9 +10,9 @@ class CreateQuiz(APIView):
         try:
             input_json = request.data
             start_date_obj = datetime.strptime(input_json['start_date'], '%d-%m-%Y %H,%M')
-            start_date = start_date_obj.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+            start_date = start_date_obj.strftime('%Y-%m-%d %H:%M:%S.%f')
             end_date_obj = datetime.strptime(input_json['end_date'], '%d-%m-%Y %H,%M')
-            end_date = end_date_obj.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+            end_date = end_date_obj.strftime('%Y-%m-%d %H:%M:%S.%f')
             create_quiz_params = {"quiz_name":input_json['quiz_name'],"start_date":start_date,"end_date":end_date}
             
             create_quiz_data = QuizSerializer(data=create_quiz_params)
